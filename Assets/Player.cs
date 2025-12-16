@@ -30,6 +30,7 @@ public class PlayerBasics : MonoBehaviour
         float speed = baseSpeed + addSpeed;
         float jump = baseJump + addJump;
 
+        animator.SetBool("standing", standing.enabled);
         animator.SetBool("onGround", steppin);
         animator.SetFloat("running", Mathf.Abs(body.linearVelocity.x));
         animator.SetFloat("inAir", body.linearVelocity.y);
@@ -40,14 +41,12 @@ public class PlayerBasics : MonoBehaviour
         else if(sprite.flipX == true && moveX > .1){
             sprite.flipX = false;
         }
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("CrouchMov")){
-            standing.enabled = false;
+        if (standing.enabled == false){
             animator.speed = Mathf.Abs(moveX) * .8f;
             baseSpeed = 4f;
             accel = 1.5f;
         }
         else{
-            standing.enabled = true;
             baseSpeed = 8f;
             accel = 2f;
         }
@@ -66,15 +65,24 @@ public class PlayerBasics : MonoBehaviour
         }
 
         
-        if (steppin && Input.GetKey(KeyCode.W) && addJump <= 4.5){
+        if (steppin && moveY > 0.1 && addJump <= 4.5){
             addJump = addJump + .007f;
         }
 
-        if (steppin && Input.GetKeyUp(KeyCode.W) && moveY > 0){
+
+        if (steppin && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) && moveY > 0){
             body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
             
             addJump = 0f;
         }
+
+        if (steppin && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || animator.GetFloat("preppin") > 1.5f){
+            standing.enabled = false;
+        }
+        else{
+            standing.enabled = true;
+        }
+        
     }
 
     void FixedUpdate(){
