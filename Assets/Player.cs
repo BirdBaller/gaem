@@ -43,11 +43,11 @@ public class PlayerBasics : MonoBehaviour
         }
         if (standing.enabled == false){
             animator.speed = Mathf.Abs(moveX) * .8f;
-            baseSpeed = 4f;
+            baseSpeed = 5.5f;
             accel = 1.5f;
         }
         else{
-            baseSpeed = 8f;
+            baseSpeed = 12f;
             accel = 2f;
         }
         
@@ -65,18 +65,18 @@ public class PlayerBasics : MonoBehaviour
         }
 
         
-        if (steppin && moveY > 0.1 && addJump <= 4.5){
+        if (steppin == true && moveY > 0.1 && addJump <= 4.5){
             addJump = addJump + .007f;
         }
 
 
-        if (steppin && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) && moveY > 0){
+        if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) && moveY > 0){
             body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
-            
             addJump = 0f;
         }
 
-        if (steppin && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || animator.GetFloat("preppin") > 1.5f){
+
+        if (steppin == true && moveY < -.5 || animator.GetFloat("preppin") > 1.5f){
             standing.enabled = false;
         }
         else{
