@@ -26,21 +26,24 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField] private bool steppin;
     [SerializeField] private bool cantStand;
     [SerializeField] private bool colliding;
+    private bool hanging;
 
 
 
     // Update is called once per frame
     void Update(){
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
+        float speed = baseSpeed + addSpeed;
+        float jump = baseJump + addJump;
+        
+
         animator.SetBool("standing", standing.enabled);
         animator.SetBool("onGround", steppin);
         animator.SetFloat("running", Mathf.Abs(body.linearVelocity.x));
         animator.SetFloat("inAir", body.linearVelocity.y);
         animator.SetFloat("preppin", addJump);
-
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
-        float speed = baseSpeed + addSpeed;
-        float jump = baseJump + addJump;
+        animator.SetBool("hang", hanging);
 
 
         if (sprite.flipX == false && moveX < -.1){
@@ -91,11 +94,15 @@ public class PlayerBasics : MonoBehaviour
             addJump = 0f;
         }
 
-        if (steppin == false && colliding == true && moveX > 0.1f){
-            body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
+        if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f){
+            hanging = true;
         }
-        else if (steppin == false && colliding == true && moveX < 0.1f){
-            
+        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.3f){
+            body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
+            hanging = false;
+        }
+        else{
+            hanging = false;
         }
     }
 
