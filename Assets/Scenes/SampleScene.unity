@@ -527,10 +527,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20952381
-    y: 0
-    width: 0.5790476
-    height: 1
+    x: 0
+    y: 0.0021551724
+    width: 1
+    height: 0.99649787
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -643,7 +643,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1.5
+  m_GravityScale: 1.41
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

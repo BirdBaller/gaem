@@ -82,7 +82,7 @@ public class PlayerBasics : MonoBehaviour
         }
         else if (Mathf.Abs(moveX) > 0){
             body.linearVelocity = new Vector2(moveX * speed, body.linearVelocity.y);
-            animator.speed = Mathf.Abs(moveX);
+            animator.speed = Mathf.Abs(moveX) + .3f;
         }
         else{
             animator.speed = 1f;
