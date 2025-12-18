@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class PlayerBasics : MonoBehaviour
 {
-    public LayerMask ground;
+    public LayerMask stuf;
     public LayerMask everything;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer sprite;
@@ -63,9 +63,9 @@ public class PlayerBasics : MonoBehaviour
             accel = 2f;
         }
 
-        
-        if (steppin == true && moveY > 0.1 && addJump <= 6){
-            addJump = addJump + .02f;
+                
+        if (steppin == true && moveY > 0.1 && addJump <= 6.7){
+            addJump = addJump + .032f;
         }
 
         if (steppin == true && moveY < -.5 || animator.GetFloat("preppin") > 1.5f){
@@ -116,8 +116,8 @@ public class PlayerBasics : MonoBehaviour
     }
 
     void Checka(){
-        steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, ground).Length > 0;
-        cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, everything).Length > 0;
+        steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, stuf).Length > 0;
+        cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, stuf).Length > 0;
         colliding = Physics2D.OverlapAreaAll(wallCheck.bounds.min, wallCheck.bounds.max, everything).Length > 0;
     }
 }

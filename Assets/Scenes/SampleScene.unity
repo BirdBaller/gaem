@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 109150658}
   - component: {fileID: 109150657}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: StandCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,7 +207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 143270699}
   - component: {fileID: 143270698}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: SteppaDetecta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 4, y: 0.2}
+  m_Size: {x: 3.95, y: 0.2}
   m_EdgeRadius: 0
 --- !u!4 &143270699
 Transform:
@@ -284,7 +284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 561447594}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: Checks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,10 +527,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.033826638
-    width: 1
-    height: 0.9323467
+    x: 0.20952381
+    y: 0
+    width: 0.5790476
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -619,7 +619,7 @@ Transform:
   m_GameObject: {fileID: 1023321838}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.15, y: -0.95, z: 0}
+  m_LocalPosition: {x: 6.22, y: -14.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -643,7 +643,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1.15
+  m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -726,12 +726,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5062990c947e0408dc0cdd8ed7a6ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBasics
-  ground:
-    serializedVersion: 2
-    m_Bits: 512
-  everything:
+  stuf:
     serializedVersion: 2
     m_Bits: 513
+  everything:
+    serializedVersion: 2
+    m_Bits: 769
   animator: {fileID: 1023321845}
   sprite: {fileID: 1023321841}
   steppers: {fileID: 143270698}
@@ -1193,7 +1193,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1625674215}
   - component: {fileID: 1625674216}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: WallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1271,7 +1271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1642161944}
   - component: {fileID: 1642161945}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: CrouchCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1469,7 +1469,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1772040603}
   - component: {fileID: 1772040602}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: StandCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
