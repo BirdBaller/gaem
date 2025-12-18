@@ -6,14 +6,15 @@ using UnityEngine.UIElements;
 
 public class PlayerBasics : MonoBehaviour
 {
-    public Rigidbody2D body;
-    public BoxCollider2D steppers;
     public LayerMask ground;
     public LayerMask everything;
-    public Animator animator;
-    public SpriteRenderer sprite;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer sprite;
+    [SerializeField] private BoxCollider2D steppers;
+    [SerializeField] private Rigidbody2D body;
     [SerializeField] private BoxCollider2D standing;
     [SerializeField] private BoxCollider2D standCheck;
+    [SerializeField] private BoxCollider2D wallCheck;
 
 
     [SerializeField] private float baseSpeed;
@@ -22,8 +23,10 @@ public class PlayerBasics : MonoBehaviour
     public float addSpeed = 0;
     public float addJump = 0;
 
-    public bool steppin;
-    public bool cantStand;
+    [SerializeField] private bool steppin;
+    [SerializeField] private bool cantStand;
+    [SerializeField] private bool colliding;
+
 
 
     // Update is called once per frame
@@ -87,6 +90,13 @@ public class PlayerBasics : MonoBehaviour
             body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
             addJump = 0f;
         }
+
+        if (steppin == false && colliding == true && moveX > 0.1f){
+            body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
+        }
+        else if (steppin == false && colliding == true && moveX < 0.1f){
+            
+        }
     }
 
     void FixedUpdate(){
@@ -101,5 +111,6 @@ public class PlayerBasics : MonoBehaviour
     void Checka(){
         steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, ground).Length > 0;
         cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, everything).Length > 0;
+        colliding = Physics2D.OverlapAreaAll(wallCheck.bounds.min, wallCheck.bounds.max, everything).Length > 0;
     }
 }
