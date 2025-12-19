@@ -6,22 +6,28 @@ using UnityEngine.UIElements;
 
 public class PlayerBasics : MonoBehaviour
 {
-    public Rigidbody2D body;
-    public BoxCollider2D steppers;
-    public LayerMask ground;
-    public LayerMask all;
-    public Animator animator;
-    public SpriteRenderer sprite;
+    public LayerMask stuf;
+    public LayerMask everything;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer sprite;
+    [SerializeField] private BoxCollider2D steppers;
+    [SerializeField] private Rigidbody2D body;
     [SerializeField] private BoxCollider2D standing;
+    [SerializeField] private BoxCollider2D standCheck;
+    [SerializeField] private BoxCollider2D wallCheck;
 
 
     [SerializeField] private float baseSpeed;
-    [SerializeField] private float baseJump = 8;
+    [SerializeField] private float baseJump = 10;
     [SerializeField] private float accel;
     public float addSpeed = 0;
     public float addJump = 0;
 
-    public bool steppin;
+    [SerializeField] private bool steppin;
+    [SerializeField] private bool cantStand;
+    [SerializeField] private bool colliding;
+    private bool hanging;
+
 
 
     // Update is called once per frame
@@ -30,6 +36,7 @@ public class PlayerBasics : MonoBehaviour
         float moveY = Input.GetAxis("Vertical");
         float speed = baseSpeed + addSpeed;
         float jump = baseJump + addJump;
+        
 
 
         
@@ -55,7 +62,7 @@ public class PlayerBasics : MonoBehaviour
 
     void FixedUpdate(){
         steppaChecka();
-
+        animator.SetBool("hang", hanging);
         animator.SetBool("standing", standing.enabled);
         animator.SetBool("onGround", steppin);
         animator.SetFloat("running", Mathf.Abs(body.linearVelocity.x));
@@ -64,6 +71,7 @@ public class PlayerBasics : MonoBehaviour
 
         float moveX = Input.GetAxis("Horizontal");
         float moveY = Input.GetAxis("Vertical");
+        
 
 
         if (sprite.flipX == false && moveX < -.1){
@@ -72,6 +80,7 @@ public class PlayerBasics : MonoBehaviour
         else if(sprite.flipX == true && moveX > .1){
             sprite.flipX = false;
         }
+
         if (standing.enabled == false){
             animator.speed = Mathf.Abs(moveX) * .8f;
             baseSpeed = 5.5f;
@@ -82,8 +91,10 @@ public class PlayerBasics : MonoBehaviour
             accel = 2f;
         }
 
+
+  
         if (steppin == true && moveY > 0.1 && addJump <= 6.7){
-            addJump = addJump + .02f;
+            addJump = addJump + .032f;
         }
 
         if (steppin == true && moveY < -.5 || animator.GetFloat("preppin") > 1.5f){
@@ -93,9 +104,49 @@ public class PlayerBasics : MonoBehaviour
             standing.enabled = true;
         }
 
+        
+        if (Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(moveX) > 0){
+            body.linearVelocity = new Vector2(moveX * speed * accel, body.linearVelocity.y);
+            animator.speed = Mathf.Abs(moveX) * 1.5f;
+        }
+        else if (Mathf.Abs(moveX) > 0){
+            body.linearVelocity = new Vector2(moveX * speed, body.linearVelocity.y);
+            animator.speed = Mathf.Abs(moveX) + .3f;
+        }
+        else{
+            animator.speed = 1f;
+        }
+
+        
+        if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow)){
+            body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
+            addJump = 0f;
+        }
+
+        if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f){
+            hanging = true;
+        }
+        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.3f){
+            body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
+            hanging = false;
+        }
+        else{
+            hanging = false;
+        }
     }
 
-    void steppaChecka(){
-        steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, all).Length > 0;
+    void FixedUpdate(){
+        Checka();
+        animator.SetBool("CantStand", cantStand);
+        
+        if (cantStand == true){
+            standing.enabled = false;
+        }
+    }
+
+    void Checka(){
+        steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, stuf).Length > 0;
+        cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, stuf).Length > 0;
+        colliding = Physics2D.OverlapAreaAll(wallCheck.bounds.min, wallCheck.bounds.max, everything).Length > 0;
     }
 }
