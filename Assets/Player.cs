@@ -32,35 +32,6 @@ public class PlayerBasics : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
-        float speed = baseSpeed + addSpeed;
-        float jump = baseJump + addJump;
-        
-
-
-        
-        if (Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(moveX) > 0){
-            body.linearVelocity = new Vector2(moveX * speed * accel, body.linearVelocity.y);
-            animator.speed = Mathf.Abs(moveX) * 1.5f;
-        }
-        else if (Mathf.Abs(moveX) > 0){
-            body.linearVelocity = new Vector2(moveX * speed, body.linearVelocity.y);
-            animator.speed = Mathf.Abs(moveX);
-        }
-        else{
-            animator.speed = 1f;
-        }
-
-
-        if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) && moveY > 0){
-            body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
-            addJump = 0f;
-        }
-        
-    }
-
-    void FixedUpdate(){
         steppaChecka();
         animator.SetBool("hang", hanging);
         animator.SetBool("standing", standing.enabled);
@@ -71,6 +42,8 @@ public class PlayerBasics : MonoBehaviour
 
         float moveX = Input.GetAxis("Horizontal");
         float moveY = Input.GetAxis("Vertical");
+        float speed = baseSpeed + addSpeed;
+        float jump = baseJump + addJump;
         
 
 
@@ -79,7 +52,7 @@ public class PlayerBasics : MonoBehaviour
         }
         else if(sprite.flipX == true && moveX > .1){
             sprite.flipX = false;
-        }
+        } // for flipping sprite when turning
 
         if (standing.enabled == false){
             animator.speed = Mathf.Abs(moveX) * .8f;
@@ -89,20 +62,26 @@ public class PlayerBasics : MonoBehaviour
         else{
             baseSpeed = 12f;
             accel = 2f;
-        }
+        } // slows down while crouching, unless if you let go of s/down arrow ig
 
 
   
         if (steppin == true && moveY > 0.1 && addJump <= 6.7){
             addJump = addJump + .032f;
-        }
+        } // charges jump on hold key
 
-        if (steppin == true && moveY < -.5 || animator.GetFloat("preppin") > 1.5f){
+        if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow)){
+            body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
+            addJump = 0f;
+        } // jumps and resets add jump
+
+
+        if (steppin == true && moveY < -.5 || addJump > 1.5f){
             standing.enabled = false;
         }
         else{
             standing.enabled = true;
-        }
+        } // for crouching and crouching when charging jump
 
         
         if (Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(moveX) > 0){
@@ -115,13 +94,8 @@ public class PlayerBasics : MonoBehaviour
         }
         else{
             animator.speed = 1f;
-        }
+        } // for running/walking
 
-        
-        if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow)){
-            body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
-            addJump = 0f;
-        }
 
         if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f){
             hanging = true;
@@ -132,7 +106,7 @@ public class PlayerBasics : MonoBehaviour
         }
         else{
             hanging = false;
-        }
+        } // for wall hanging
     }
 
     void FixedUpdate(){
@@ -141,12 +115,12 @@ public class PlayerBasics : MonoBehaviour
         
         if (cantStand == true){
             standing.enabled = false;
-        }
+        } // makes sur your still crouched if you let go of s/down arrow without enough headspace
     }
 
     void Checka(){
-        steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, stuf).Length > 0;
-        cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, stuf).Length > 0;
-        colliding = Physics2D.OverlapAreaAll(wallCheck.bounds.min, wallCheck.bounds.max, everything).Length > 0;
+        steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, stuf).Length > 0; // you be steppin not floatin
+        cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, stuf).Length > 0; // bro dont hit your head
+        colliding = Physics2D.OverlapAreaAll(wallCheck.bounds.min, wallCheck.bounds.max, everything).Length > 0; // wow, you can hang on a wall
     }
 }
