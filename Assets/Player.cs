@@ -89,7 +89,7 @@ public class PlayerBasics : MonoBehaviour
         if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f){
             hanging = true;
         }
-        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.3f){
+        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.1f){
             body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
             hanging = false;
         }
@@ -111,6 +111,7 @@ public class PlayerBasics : MonoBehaviour
         if (playerDeath == false && health <= 0){
             playerDeath = true;
         }
+
         
         if (cantStand == true){
             standing.enabled = false;
