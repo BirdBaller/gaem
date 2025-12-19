@@ -16,7 +16,8 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField] private BoxCollider2D standCheck;
     [SerializeField] private BoxCollider2D wallCheck;
 
-
+    private float moveX;
+    private float moveY;
     [SerializeField] private float baseSpeed;
     [SerializeField] private float baseJump = 10;
     [SerializeField] private float accel;
@@ -29,10 +30,19 @@ public class PlayerBasics : MonoBehaviour
     private bool hanging;
 
 
+    [SerializeField] private int health;
+    public int playerHealth;
+    public int maxHealth;
+    public int armor;
+    public bool playerDeath;
+
+    [SerializeField] private float stamina;
+    public float playerStamina;
+
+
 
     // Update is called once per frame
     void Update(){
-        steppaChecka();
         animator.SetBool("hang", hanging);
         animator.SetBool("standing", standing.enabled);
         animator.SetBool("onGround", steppin);
@@ -40,31 +50,10 @@ public class PlayerBasics : MonoBehaviour
         animator.SetFloat("inAir", body.linearVelocity.y);
         animator.SetFloat("preppin", addJump);
 
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
+        
         float speed = baseSpeed + addSpeed;
         float jump = baseJump + addJump;
         
-
-
-        if (sprite.flipX == false && moveX < -.1){
-            sprite.flipX = true;
-        }
-        else if(sprite.flipX == true && moveX > .1){
-            sprite.flipX = false;
-        } // for flipping sprite when turning
-
-        if (standing.enabled == false){
-            animator.speed = Mathf.Abs(moveX) * .8f;
-            baseSpeed = 5.5f;
-            accel = 1.5f;
-        }
-        else{
-            baseSpeed = 12f;
-            accel = 2f;
-        } // slows down while crouching, unless if you let go of s/down arrow ig
-
-
   
         if (steppin == true && moveY > 0.1 && addJump <= 6.7){
             addJump = addJump + .032f;
@@ -111,11 +100,38 @@ public class PlayerBasics : MonoBehaviour
 
     void FixedUpdate(){
         Checka();
+        moveX = Input.GetAxis("Horizontal");
+        moveY = Input.GetAxis("Vertical");
+        
+        health = playerHealth + armor;
+        playerStamina = stamina;
+
         animator.SetBool("CantStand", cantStand);
+
+        if (playerDeath == false && health <= 0){
+            playerDeath = true;
+        }
         
         if (cantStand == true){
             standing.enabled = false;
         } // makes sur your still crouched if you let go of s/down arrow without enough headspace
+
+        if (sprite.flipX == false && moveX < -.1){
+            sprite.flipX = true;
+        }
+        else if(sprite.flipX == true && moveX > .1){
+            sprite.flipX = false;
+        } // for flipping sprite when turning
+
+        if (standing.enabled == false || animator.GetCurrentAnimatorStateInfo(0).IsName("CrouchMov")){
+            animator.speed = Mathf.Abs(moveX) * .8f;
+            baseSpeed = 5.5f;
+            accel = 1.5f;
+        }
+        else{
+            baseSpeed = 12f;
+            accel = 2f;
+        } // slows down while crouching
     }
 
     void Checka(){

@@ -747,6 +747,13 @@ MonoBehaviour:
   steppin: 0
   cantStand: 0
   colliding: 0
+  health: 0
+  playerHealth: 0
+  maxHealth: 0
+  armor: 0
+  playerDeath: 0
+  stamina: 0
+  playerStamina: 0
 --- !u!95 &1023321845
 Animator:
   serializedVersion: 7
