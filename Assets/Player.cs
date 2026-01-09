@@ -36,7 +36,7 @@ public class PlayerBasics : MonoBehaviour
     public int armor;
     public bool playerDeath;
     public float stamina;
-    private bool StaminaUse;
+    public bool StaminaUse;
 
 
     void Start(){
