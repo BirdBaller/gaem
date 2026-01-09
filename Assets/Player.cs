@@ -30,7 +30,7 @@ public class PlayerBasics : MonoBehaviour
     private bool hanging;
 
 
-    [SerializeField] private int health;
+    [SerializeField] private float health;
     public int playerHealth;
     public int maxHealth;
     public int armor;
@@ -41,7 +41,7 @@ public class PlayerBasics : MonoBehaviour
 
     void Start(){
         playerHealth = 100;
-        stamina = 100f;
+        stamina = 100;
     }
 
     // Update is called once per frame
@@ -58,16 +58,16 @@ public class PlayerBasics : MonoBehaviour
         float jump = baseJump + addJump;
         
   
-        if (steppin == true && moveY > 0.1 && addJump <= 6.7 && stamina < 0){
-            addJump = addJump + .032f;
+        if (steppin == true && moveY > 0.1 && addJump < 7 && stamina > 0){
             StaminaUse = true;
-            stamina = stamina - .002f;
+            InvokeRepeating("repeat", 0, 1f);
         } // charges jump on hold key
 
         if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow)){
+            CancelInvoke("repeat");
             body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
-            addJump = 0f;
             StaminaUse = false;
+            addJump = 0;
         } // jumps and resets add jump
 
 
@@ -94,16 +94,19 @@ public class PlayerBasics : MonoBehaviour
 
         if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f && stamina > 0){
             hanging = true;
-            stamina = stamina - .35f;
             StaminaUse = true;
+            InvokeRepeating("repeat", 0, .67f);
         }
-        else if(steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f && stamina < .02f)
-        {
+        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f && stamina < 1){
+            CancelInvoke("repeat");
+            hanging = false;
             StaminaUse = false;
+            body.linearVelocity = new Vector2(-moveX, body.linearVelocity.y);
         }
-        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.1f){
+        else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.1f || stamina < .02f){
             body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
             hanging = false;
+            CancelInvoke("repeat");
         }
         else{
             hanging = false;
@@ -144,11 +147,31 @@ public class PlayerBasics : MonoBehaviour
             baseSpeed = 12f;
             accel = 2f;
         } // slows down while crouching
+
+        if (StaminaUse == false && stamina < 100){
+            InvokeRepeating("repeat", 3f, .2f);
+        }
+        else if (StaminaUse == false && stamina > 99){
+            CancelInvoke("repeat");
+        }
     }
 
     void Checka(){
         steppin = Physics2D.OverlapAreaAll(steppers.bounds.min, steppers.bounds.max, stuf).Length > 0; // you be steppin not floatin
         cantStand = Physics2D.OverlapAreaAll(standCheck.bounds.min, standCheck.bounds.max, stuf).Length > 0; // bro dont hit your head
         colliding = Physics2D.OverlapAreaAll(wallCheck.bounds.min, wallCheck.bounds.max, everything).Length > 0; // wow, you can hang on a wall
+    }
+
+    private void repeat(){
+        if (StaminaUse == true){
+            stamina = stamina - .2f;
+        }
+        else if (StaminaUse == false){
+            stamina = stamina + .2f;
+        }
+
+        if(steppin == true && moveY > 0.1){
+            addJump = addJump + .2f;
+        }
     }
 }
