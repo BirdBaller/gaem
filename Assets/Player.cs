@@ -35,11 +35,14 @@ public class PlayerBasics : MonoBehaviour
     public int maxHealth;
     public int armor;
     public bool playerDeath;
+    public float stamina;
+    private bool StaminaUse;
 
-    [SerializeField] private float stamina;
-    public float playerStamina;
 
-
+    void Start(){
+        playerHealth = 100;
+        stamina = 100f;
+    }
 
     // Update is called once per frame
     void Update(){
@@ -55,13 +58,16 @@ public class PlayerBasics : MonoBehaviour
         float jump = baseJump + addJump;
         
   
-        if (steppin == true && moveY > 0.1 && addJump <= 6.7){
+        if (steppin == true && moveY > 0.1 && addJump <= 6.7 && stamina < 0){
             addJump = addJump + .032f;
+            StaminaUse = true;
+            stamina = stamina - .002f;
         } // charges jump on hold key
 
         if (steppin == true && Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow)){
             body.linearVelocity = new Vector2(body.linearVelocity.x, jump + addJump);
             addJump = 0f;
+            StaminaUse = false;
         } // jumps and resets add jump
 
 
@@ -86,8 +92,14 @@ public class PlayerBasics : MonoBehaviour
         } // for running/walking
 
 
-        if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f){
+        if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f && stamina > 0){
             hanging = true;
+            stamina = stamina - .35f;
+            StaminaUse = true;
+        }
+        else if(steppin == false && colliding == true && Mathf.Abs(moveX) > 0.5f && moveY > 0f && stamina < .02f)
+        {
+            StaminaUse = false;
         }
         else if (steppin == false && colliding == true && Mathf.Abs(moveX) > 0.1f){
             body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
@@ -104,7 +116,6 @@ public class PlayerBasics : MonoBehaviour
         moveY = Input.GetAxis("Vertical");
         
         health = playerHealth + armor;
-        playerStamina = stamina;
 
         animator.SetBool("CantStand", cantStand);
 
